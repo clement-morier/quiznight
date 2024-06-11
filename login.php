@@ -1,25 +1,19 @@
 <?php
 include('db.php');
+include('User.php');
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $user = new User($conn);
+    $user->username = $_POST['username'];
+    $user->password = $_POST['password'];
 
-    $sql = "SELECT * FROM users WHERE username='$username'";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        if (password_verify($password, $row['password'])) {
-            $_SESSION['username'] = $username;
-            $_SESSION['admin'] = $row['admin'];
-            header("Location: admin.php");
-        } else {
-            echo "Invalid password";
-        }
+    if ($user->login()) {
+        $_SESSION['username'] = $user->username;
+        $_SESSION['admin'] = $user->admin;
+        header("Location: admin.php");
     } else {
-        echo "No user found";
+        echo "Invalid credentials";
     }
 }
 

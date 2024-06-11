@@ -1,25 +1,24 @@
 <?php
 session_start();
-
 if (!isset($_SESSION['username']) || $_SESSION['admin'] != 1) {
     header("Location: login.php");
     exit();
 }
 
 include('db.php');
+include('Quiz.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $title = $_POST['title'];
-    $question = $_POST['question'];
-    $answer = $_POST['answer'];
-    $created_by = $_SESSION['username'];
+    $quiz = new Quiz($conn);
+    $quiz->title = $_POST['title'];
+    $quiz->question = $_POST['question'];
+    $quiz->answer = $_POST['answer'];
+    $quiz->created_by = $_SESSION['username'];
 
-    $sql = "INSERT INTO quizzes (title, created_by, question, answer) VALUES ('$title', '$created_by', '$question', '$answer')";
-
-    if ($conn->query($sql) === TRUE) {
+    if ($quiz->create()) {
         header("Location: admin.php");
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        echo "Error: Could not create quiz";
     }
 }
 

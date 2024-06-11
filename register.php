@@ -1,16 +1,17 @@
 <?php
 include('db.php');
+include('User.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'];
-    $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+    $user = new User($conn);
+    $user->username = $_POST['username'];
+    $user->password = $_POST['password'];
+    $user->admin = isset($_POST['admin']) ? 1 : 0;
 
-    $sql = "INSERT INTO users (username, password) VALUES ('$username', '$password')";
-
-    if ($conn->query($sql) === TRUE) {
+    if ($user->register()) {
         header("Location: login.php");
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        echo "Error: Registration failed";
     }
 }
 
@@ -20,5 +21,9 @@ $conn->close();
 <?php include('templates/header.php'); ?>
 <form action="register.php" method="POST">
     <?php include('templates/register_form.php'); ?>
+    <div>
+        <label for="admin">Admin:</label>
+        <input type="checkbox" id="admin" name="admin">
+    </div>
 </form>
 <?php include('templates/footer.php'); ?>

@@ -1,8 +1,9 @@
 <?php
 include('db.php');
+include('Quiz.php');
 
-$sql = "SELECT * FROM quizzes";
-$result = $conn->query($sql);
+$quiz = new Quiz($conn);
+$quizzes = $quiz->getAll();
 
 $conn->close();
 ?>
@@ -14,7 +15,7 @@ $conn->close();
         <th>Quiz Title</th>
         <th>Created By</th>
     </tr>
-    <?php while($row = $result->fetch_assoc()): ?>
+    <?php while($row = $quizzes->fetch_assoc()): ?>
         <tr>
             <td><?php echo $row['title']; ?></td>
             <td><?php echo $row['created_by']; ?></td>
