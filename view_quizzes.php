@@ -12,11 +12,13 @@ $conn->close();
 <table>
     <tr>
         <th>Quiz Title</th>
+        <th>Created By</th>
     </tr>
     <?php while($row = $result->fetch_assoc()): ?>
         <tr>
             <td><?php echo $row['title']; ?></td>
+            <td><?php echo $row['created_by']; ?></td>
         </tr>
     <?php endwhile; ?>
 </table>
-<?php include('templates/footer.php'); ?>   
+<?php include('templates/footer.php'); ?>

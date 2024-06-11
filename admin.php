@@ -1,13 +1,8 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['username']) || $_SESSION['admin'] != 1) {
     header("Location: login.php");
-    exit();
-}
-
-if (!isset($_SESSION['admin']) || $_SESSION['admin'] != 1) {
-    echo "You do not have permission to access this page.";
     exit();
 }
 
